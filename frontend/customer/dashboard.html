@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge">Customer</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="tickets.html">My Tickets</a>
+            <a href="create-ticket.html">Create Ticket</a>
+            <a href="profile.html">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Customer</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Welcome, <span id="welcome-name">Customer</span></h1>
+                <p class="page-subtitle">Track and manage your support requests and issues</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <a href="create-ticket.html" class="btn btn-primary">+ Create New Ticket</a>
+                <a href="tickets.html" class="btn btn-secondary">View All Tickets</a>
+            </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">🎫</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Total Tickets</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-info-theme">
+                <div class="stat-icon">📬</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-open">0</div>
+                    <div class="stat-label">Open Tickets</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-warning">
+                <div class="stat-icon">⚙️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-in-progress">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-success">
+                <div class="stat-icon">✅</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-resolved">0</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Tickets Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Recent Support Tickets</h2>
+                <a href="tickets.html" class="btn btn-secondary btn-sm">View All &rarr;</a>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Date Created</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-tickets-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading tickets...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Customer Portal</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/customer.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            CustomerApp.loadDashboard();
+        });
+    </script>
+</body>
+</html>

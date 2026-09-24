@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration - Support CRM</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <span>Support CRM</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="login.html">Sign In</a>
+        </div>
+    </nav>
+
+    <div class="auth-wrapper">
+        <div class="auth-card" style="max-width: 520px;">
+            <div class="auth-header">
+                <h2>Create Customer Account</h2>
+                <p>Register to submit and track support tickets</p>
+            </div>
+
+            <div id="register-alert" class="alert"></div>
+
+            <form id="register-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label" for="reg-name">Full Name *</label>
+                    <input type="text" id="reg-name" class="form-control" placeholder="Jane Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-email">Email Address *</label>
+                    <input type="email" id="reg-email" class="form-control" placeholder="jane@company.com" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="reg-phone">Phone Number</label>
+                        <input type="tel" id="reg-phone" class="form-control" placeholder="+1 555-0199">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="reg-company">Company</label>
+                        <input type="text" id="reg-company" class="form-control" placeholder="Acme Inc.">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-password">Password *</label>
+                    <input type="password" id="reg-password" class="form-control" placeholder="Create a secure password" minlength="6" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-confirm">Confirm Password *</label>
+                    <input type="password" id="reg-confirm" class="form-control" placeholder="Re-enter your password" minlength="6" required>
+                </div>
+
+                <button type="submit" id="reg-btn" class="btn btn-primary btn-block" style="margin-top: 1rem;">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                Already registered? <a href="login.html?tab=customer">Sign In to your account</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        async function handleRegister(e) {
+            e.preventDefault();
+            Auth.hideAlert("register-alert");
+
+            const name = document.getElementById("reg-name").value.trim();
+            const email = document.getElementById("reg-email").value.trim();
+            const phone = document.getElementById("reg-phone").value.trim();
+            const company = document.getElementById("reg-company").value.trim();
+            const password = document.getElementById("reg-password").value;
+            const confirm = document.getElementById("reg-confirm").value;
+            const btn = document.getElementById("reg-btn");
+
+            if (password !== confirm) {
+                Auth.showAlert("register-alert", "Passwords do not match. Please re-enter.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Creating Account...";
+
+            try {
+                await API.post("/auth/customer/register", {
+                    name,
+                    email,
+                    password,
+                    phone: phone || null,
+                    company: company || null
+                });
+
+                // Registration successful -> redirect to login with notification
+                window.location.href = "login.html?tab=customer&registered=1";
+            } catch (err) {
+                Auth.showAlert("register-alert", err.message || "Registration failed. Please try a different email address.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Create Account";
+            }
+        }
+    </script>
+</body>
+</html>

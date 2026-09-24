@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge">Customer</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="tickets.html">My Tickets</a>
+            <a href="create-ticket.html">Create Ticket</a>
+            <a href="profile.html" class="active">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Customer</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 680px;">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">My Account Profile</h1>
+                <p class="page-subtitle">Manage your personal and company contact details</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div id="profile-alert" class="alert"></div>
+
+                <form onsubmit="CustomerApp.handleUpdateProfile(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="prof-name">Full Name</label>
+                        <input type="text" id="prof-name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="prof-email">Email Address</label>
+                        <input type="email" id="prof-email" class="form-control" disabled style="background-color: var(--secondary-light); cursor: not-allowed;">
+                        <small style="color: var(--text-muted);">Email address serves as your primary account identifier and cannot be modified.</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="prof-phone">Phone Number</label>
+                            <input type="tel" id="prof-phone" class="form-control" placeholder="+1 555-0199">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="prof-company">Company</label>
+                            <input type="text" id="prof-company" class="form-control" placeholder="Company Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="prof-notes">Account Notes / Preferences</label>
+                        <textarea id="prof-notes" class="form-control" rows="3" placeholder="Preferences or notes..."></textarea>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                        <button type="submit" id="prof-btn" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Customer Portal</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/customer.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            CustomerApp.loadProfile();
+        });
+    </script>
+</body>
+</html>

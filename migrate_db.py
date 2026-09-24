@@ -50,9 +50,9 @@ def migrate_database():
                 ALTER TABLE tickets
                 ADD COLUMN assigned_agent_id INTEGER REFERENCES users(id)
             """)
-            print("✓ Added assigned_agent_id column to tickets table")
+            print("[+] Added assigned_agent_id column to tickets table")
         else:
-            print("✓ assigned_agent_id column already exists")
+            print("[OK] assigned_agent_id column already exists")
 
         # ===== MIGRATION 2: Add is_active to users table =====
         print("\nChecking users table schema...")
@@ -67,19 +67,36 @@ def migrate_database():
                 ALTER TABLE users
                 ADD COLUMN is_active TEXT DEFAULT 'True'
             """)
-            print("✓ Added is_active column to users table")
+            print("[+] Added is_active column to users table")
         else:
-            print("✓ is_active column already exists")
+            print("[OK] is_active column already exists")
+
+        # ===== MIGRATION 3: Add hashed_password to customers table =====
+        print("\nChecking customers table schema...")
+
+        # Get existing columns in customers table
+        cursor.execute("PRAGMA table_info(customers)")
+        columns = [column[1] for column in cursor.fetchall()]
+
+        if 'hashed_password' not in columns:
+            print("Adding hashed_password column to customers table...")
+            cursor.execute("""
+                ALTER TABLE customers
+                ADD COLUMN hashed_password TEXT
+            """)
+            print("[+] Added hashed_password column to customers table")
+        else:
+            print("[OK] hashed_password column already exists")
 
         # Commit changes and close connection
         conn.commit()
         conn.close()
 
-        print("\n✅ Database migration completed successfully!")
+        print("\n[SUCCESS] Database migration completed successfully!")
         print("You can now restart the server.")
 
     except Exception as e:
-        print(f"❌ Migration failed: {e}")
+        print(f"[ERROR] Migration failed: {e}")
         # Ensure connection is closed even if error occurs
         if 'conn' in locals():
             conn.close()

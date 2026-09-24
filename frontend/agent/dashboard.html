@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge" style="background-color: var(--warning-light); color: var(--warning); border-color: var(--warning-border);">Agent Desk</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="tickets.html">All Tickets</a>
+            <a href="customers.html">Customers</a>
+            <a href="../admin/dashboard.html">Reports</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Staff</span>
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">AGENT</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Agent Workspace</h1>
+                <p class="page-subtitle">Welcome back, <span id="welcome-agent-name">Agent</span>. Here is today's support queue.</p>
+            </div>
+            <div>
+                <a href="tickets.html" class="btn btn-primary">Manage All Tickets</a>
+            </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">📋</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-total-tickets">0</div>
+                    <div class="stat-label">Total Tickets</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-info-theme">
+                <div class="stat-icon">🔔</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-open-tickets">0</div>
+                    <div class="stat-label">Open / Unassigned</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-warning">
+                <div class="stat-icon">🛠️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-inprogress-tickets">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-success">
+                <div class="stat-icon">🎉</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-resolved-tickets">0</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-total-customers">0</div>
+                    <div class="stat-label">Registered Customers</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Tickets Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Recent Tickets Needing Attention</h2>
+                <a href="tickets.html" class="btn btn-secondary btn-sm">View Full Queue &rarr;</a>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Subject</th>
+                            <th>Customer</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Assigned Agent</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agent-recent-tickets">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading tickets...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Staff Workspace</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/agent.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            AgentApp.loadDashboard();
+        });
+    </script>
+</body>
+</html>

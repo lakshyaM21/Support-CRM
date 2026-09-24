@@ -1,0 +1,82 @@
+http://127.0.0.1:8000/frontend/<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support CRM - Customer Support Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge">FastAPI & SQLite</span>
+        </a>
+        <div class="nav-links">
+            <a href="login.html" class="btn btn-secondary btn-sm">Sign In</a>
+            <a href="register.html" class="btn btn-primary btn-sm">Customer Register</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Customer Support & CRM Platform</h1>
+            <p>A unified system connecting clients and support staff with secure JWT multi-role authentication, real-time ticket tracking, and automated ownership validation.</p>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="register.html" class="btn btn-primary" style="padding: 0.75rem 1.75rem; font-size: 1rem;">Get Started as Customer</a>
+                <a href="login.html" class="btn btn-secondary" style="padding: 0.75rem 1.75rem; font-size: 1rem;">Access Staff Portal</a>
+            </div>
+
+            <div class="portal-grid">
+                <!-- Customer Portal Card -->
+                <div class="portal-card">
+                    <div>
+                        <div class="stat-icon" style="background-color: var(--primary-light); color: var(--primary); margin-bottom: 1rem;">
+                            👤
+                        </div>
+                        <h3>Customer Portal</h3>
+                        <p>Submit tickets, monitor resolution progress, communicate with support agents, and manage your support profile securely.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <a href="login.html?tab=customer" class="btn btn-primary btn-sm">Customer Login</a>
+                        <a href="register.html" class="btn btn-secondary btn-sm">Register</a>
+                    </div>
+                </div>
+
+                <!-- Agent Portal Card -->
+                <div class="portal-card">
+                    <div>
+                        <div class="stat-icon" style="background-color: var(--warning-light); color: var(--warning); margin-bottom: 1rem;">
+                            🎧
+                        </div>
+                        <h3>Agent Desk</h3>
+                        <p>Triage incoming tickets, update statuses, assign issues to team members, and log communications with customers.</p>
+                    </div>
+                    <div>
+                        <a href="login.html?tab=agent" class="btn btn-secondary btn-sm btn-block">Agent Login</a>
+                    </div>
+                </div>
+
+                <!-- Admin Portal Card -->
+                <div class="portal-card">
+                    <div>
+                        <div class="stat-icon" style="background-color: var(--success-light); color: var(--success); margin-bottom: 1rem;">
+                            📊
+                        </div>
+                        <h3>Admin Analytics</h3>
+                        <p>Track team workload, inspect ticket resolution summaries, evaluate response metrics, and manage user accounts.</p>
+                    </div>
+                    <div>
+                        <a href="login.html?tab=agent" class="btn btn-secondary btn-sm btn-block">Admin Login</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Built with FastAPI, SQLAlchemy, SQLite, JWT & Vanilla JavaScript</p>
+    </footer>
+</body>
+</html>

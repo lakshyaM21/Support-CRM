@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Support CRM</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <span>Support CRM</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="register.html">Customer Register</a>
+        </div>
+    </nav>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Welcome Back</h2>
+                <p>Choose your portal to sign in to Support CRM</p>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="auth-tabs">
+                <button type="button" id="tab-customer" class="auth-tab-btn active" onclick="switchTab('customer')">Customer Portal</button>
+                <button type="button" id="tab-staff" class="auth-tab-btn" onclick="switchTab('staff')">Staff Portal (Agent/Admin)</button>
+            </div>
+
+            <div id="login-alert" class="alert"></div>
+
+            <!-- Customer Login Form -->
+            <form id="customer-login-form" onsubmit="handleCustomerLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="cust-email">Email Address</label>
+                    <input type="email" id="cust-email" class="form-control" placeholder="name@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cust-password">Password</label>
+                    <input type="password" id="cust-password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" id="cust-btn" class="btn btn-primary btn-block">Sign In as Customer</button>
+            </form>
+
+            <!-- Staff (Agent/Admin) Login Form -->
+            <form id="staff-login-form" style="display: none;" onsubmit="handleStaffLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="staff-username">Username</label>
+                    <input type="text" id="staff-username" class="form-control" placeholder="Agent or Admin username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="staff-password">Password</label>
+                    <input type="password" id="staff-password" class="form-control" placeholder="Enter your staff password" required>
+                </div>
+                <button type="submit" id="staff-btn" class="btn btn-primary btn-block">Sign In as Staff</button>
+            </form>
+
+            <div class="auth-footer" id="customer-footer">
+                New customer? <a href="register.html">Create your account</a>
+            </div>
+            <div class="auth-footer" id="staff-footer" style="display: none;">
+                Staff accounts are provisioned by system administrators.
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function switchTab(type) {
+            const custTab = document.getElementById("tab-customer");
+            const staffTab = document.getElementById("tab-staff");
+            const custForm = document.getElementById("customer-login-form");
+            const staffForm = document.getElementById("staff-login-form");
+            const custFooter = document.getElementById("customer-footer");
+            const staffFooter = document.getElementById("staff-footer");
+
+            Auth.hideAlert("login-alert");
+
+            if (type === "customer") {
+                custTab.classList.add("active");
+                staffTab.classList.remove("active");
+                custForm.style.display = "block";
+                staffForm.style.display = "none";
+                custFooter.style.display = "block";
+                staffFooter.style.display = "none";
+            } else {
+                staffTab.classList.add("active");
+                custTab.classList.remove("active");
+                staffForm.style.display = "block";
+                custForm.style.display = "none";
+                staffFooter.style.display = "block";
+                custFooter.style.display = "none";
+            }
+        }
+
+        // Check query parameter (e.g. ?tab=agent or ?expired=1)
+        window.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get("tab") === "agent" || params.get("tab") === "staff") {
+                switchTab("staff");
+            }
+            if (params.get("expired") === "1") {
+                Auth.showAlert("login-alert", "Your session has expired. Please sign in again.", "danger");
+            }
+            if (params.get("registered") === "1") {
+                Auth.showAlert("login-alert", "Account created successfully! Please sign in with your credentials.", "success");
+            }
+        });
+
+        // Customer Login Handler
+        async function handleCustomerLogin(e) {
+            e.preventDefault();
+            Auth.hideAlert("login-alert");
+            const email = document.getElementById("cust-email").value.trim();
+            const password = document.getElementById("cust-password").value;
+            const btn = document.getElementById("cust-btn");
+
+            btn.disabled = true;
+            btn.textContent = "Signing In...";
+
+            try {
+                const res = await API.post("/auth/customer/login", { email, password });
+                API.setSession(res.access_token, res.customer, "customer");
+                window.location.href = "customer/dashboard.html";
+            } catch (err) {
+                Auth.showAlert("login-alert", err.message || "Failed to sign in. Please verify your email and password.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Sign In as Customer";
+            }
+        }
+
+        // Staff (Agent/Admin) Login Handler
+        async function handleStaffLogin(e) {
+            e.preventDefault();
+            Auth.hideAlert("login-alert");
+            const username = document.getElementById("staff-username").value.trim();
+            const password = document.getElementById("staff-password").value;
+            const btn = document.getElementById("staff-btn");
+
+            btn.disabled = true;
+            btn.textContent = "Signing In...";
+
+            try {
+                // OAuth2 form data
+                const formData = new URLSearchParams();
+                formData.append("username", username);
+                formData.append("password", password);
+
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: formData.toString()
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.detail || "Invalid username or password");
+                }
+
+                const data = await response.json();
+                const token = data.access_token;
+
+                // Fetch staff profile with token to identify role
+                const meRes = await fetch(`${API_BASE_URL}/auth/me`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const user = await meRes.json();
+
+                API.setSession(token, user, user.role || "agent");
+
+                if (user.role === "admin") {
+                    window.location.href = "admin/dashboard.html";
+                } else {
+                    window.location.href = "agent/dashboard.html";
+                }
+            } catch (err) {
+                Auth.showAlert("login-alert", err.message || "Authentication failed. Check your staff credentials.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Sign In as Staff";
+            }
+        }
+    </script>
+</body>
+</html>

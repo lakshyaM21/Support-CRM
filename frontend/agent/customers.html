@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers Directory - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge" style="background-color: var(--warning-light); color: var(--warning); border-color: var(--warning-border);">Agent Desk</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="tickets.html">All Tickets</a>
+            <a href="customers.html" class="active">Customers</a>
+            <a href="../admin/dashboard.html">Reports</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Staff</span>
+                <span style="font-size: 0.75rem; background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">AGENT</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Customer Directory</h1>
+                <p class="page-subtitle">View client accounts and contact information</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Registered Customers</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Full Name</th>
+                            <th>Email Address</th>
+                            <th>Phone</th>
+                            <th>Company</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agent-customers-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading customers...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Staff Workspace</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/agent.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            AgentApp.loadCustomersList();
+        });
+    </script>
+</body>
+</html>

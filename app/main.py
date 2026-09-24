@@ -2,18 +2,19 @@
 Main application module for Support CRM Backend.
 
 This module initializes the FastAPI application, sets up database tables,
+configures CORS middleware for frontend integration, mounts static frontend files,
 and includes all API routers for authentication, customers, tickets,
 communication logs, and reports.
 """
 
+import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy import inspect
+
 from app import models, database, auth
 from app.routers import customers, tickets, logs, reports
-
-# Create all database tables defined in models (only if they don't exist)
-# This ensures the database schema is up to date on application startup
-# Note: In production, use proper database migrations (Alembic)
-from sqlalchemy import inspect
 
 # Check if tables already exist to avoid unnecessary recreation during reloads
 inspector = inspect(database.engine)
@@ -26,9 +27,21 @@ else:
     print("Database tables already exist, skipping creation")
 
 # Initialize FastAPI application with title for API documentation
-app = FastAPI(title="Support CRM Backend")
+app = FastAPI(
+    title="Support CRM Backend",
+    description="Customer Support CRM API with multi-role JWT authentication and ticket management"
+)
 
-# Include authentication router for user login, registration, and profile
+# Configure CORS middleware so the frontend can communicate with backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include authentication router for user login, registration, and customer auth
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 
 # Include customers router for CRUD operations on customer profiles
@@ -42,6 +55,11 @@ app.include_router(logs.router, prefix="/logs", tags=["Communication Logs"])
 
 # Include reports router for analytics and reporting endpoints
 app.include_router(reports.router, prefix="/reports", tags=["Reports"])
+
+# Mount static frontend directory if present
+frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
+if os.path.exists(frontend_dir):
+    app.mount("/frontend", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
 @app.get("/", tags=["Root"])
 def root():

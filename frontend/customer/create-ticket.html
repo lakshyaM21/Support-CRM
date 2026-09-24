@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ticket - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge">Customer</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="tickets.html">My Tickets</a>
+            <a href="create-ticket.html" class="active">Create Ticket</a>
+            <a href="profile.html">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Customer</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 760px;">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Submit Support Ticket</h1>
+                <p class="page-subtitle">Describe your request or technical issue below</p>
+            </div>
+            <div>
+                <a href="tickets.html" class="btn btn-secondary">&larr; Back to Tickets</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div id="ticket-alert" class="alert"></div>
+
+                <form id="create-ticket-form" onsubmit="CustomerApp.handleCreateTicket(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="ticket-title">Ticket Subject / Title *</label>
+                        <input type="text" id="ticket-title" class="form-control" placeholder="Brief summary of the issue (e.g. Cannot log in to email)" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="ticket-priority">Priority Level</label>
+                        <select id="ticket-priority" class="form-control">
+                            <option value="low">Low - General inquiry or minor suggestion</option>
+                            <option value="medium" selected>Medium - Normal issue impacting non-critical work</option>
+                            <option value="high">High - Significant issue with high business impact</option>
+                            <option value="urgent">Urgent - Critical blocker or system outage</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="ticket-description">Detailed Description *</label>
+                        <textarea id="ticket-description" class="form-control" rows="6" placeholder="Provide specific steps to reproduce the issue, error messages received, or context..." required></textarea>
+                    </div>
+
+                    <div style="background-color: var(--primary-light); border: 1px solid var(--primary-border); padding: 0.85rem 1rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-size: 0.85rem; color: #1e3a8a;">
+                        ℹ️ <strong>Note:</strong> Your ticket will be automatically associated with your authenticated customer account and queued for support agent review.
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <a href="tickets.html" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" id="submit-btn" class="btn btn-primary" style="padding-left: 2rem; padding-right: 2rem;">Submit Ticket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Customer Portal</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/customer.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            Auth.requireAuth("customer");
+        });
+    </script>
+</body>
+</html>

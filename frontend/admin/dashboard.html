@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Reports & Analytics - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge" style="background-color: var(--success-light); color: var(--success); border-color: var(--success-border);">Admin Analytics</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html" class="active">Reports & Analytics</a>
+            <a href="../agent/tickets.html">All Tickets</a>
+            <a href="../agent/customers.html">Customers</a>
+            <a href="../agent/dashboard.html">Agent Workspace</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Admin</span>
+                <span style="font-size: 0.75rem; background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-weight: 700;">ADMIN</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Analytics & Reports</h1>
+                <p class="page-subtitle">Real-time performance metrics and ticket distribution analytics</p>
+            </div>
+            <div>
+                <a href="../agent/tickets.html" class="btn btn-secondary">Go to Ticket Queue &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Analytics Metric Cards from /reports/tickets-summary -->
+        <div class="stats-grid">
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">📊</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="rep-total">0</div>
+                    <div class="stat-label">Total System Tickets</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-info-theme">
+                <div class="stat-icon">📬</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="rep-open">0</div>
+                    <div class="stat-label">Open Tickets</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-warning">
+                <div class="stat-icon">⚙️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="rep-inprogress">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-success">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="rep-resolved">0</div>
+                    <div class="stat-label">Resolved / Closed</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-info-theme">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="rep-resp-time">24 hrs</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start;">
+            <!-- Agent Workload Table from /reports/agent-workload -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Agent Workload Distribution</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Agent Username</th>
+                                <th>Assigned Tickets</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workload-tbody">
+                            <tr>
+                                <td colspan="2" style="text-align: center; padding: 2rem; color: var(--text-muted);">Loading agent workload...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Overview Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">System Status & Endpoints</h2>
+                </div>
+                <div class="card-body" style="font-size: 0.92rem; line-height: 1.8;">
+                    <p><strong>FastAPI Swagger Documentation:</strong> <a href="/docs" target="_blank" style="color: var(--primary); font-weight: 600;">/docs</a></p>
+                    <p><strong>FastAPI ReDoc:</strong> <a href="/redoc" target="_blank" style="color: var(--primary); font-weight: 600;">/redoc</a></p>
+                    <p><strong>Database:</strong> SQLite (<code>crm.db</code>) with SQLAlchemy ORM</p>
+                    <p><strong>Authentication:</strong> JWT (HS256) with Bcrypt Password Hashing</p>
+                    <p><strong>Access Control:</strong> Customer-isolated tickets & Staff multi-role authorization</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Admin Workspace</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            AdminApp.loadReports();
+        });
+    </script>
+</body>
+</html>

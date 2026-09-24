@@ -80,9 +80,9 @@ class CustomerBase(BaseModel):
     """
     name: str
     email: str
-    phone: Optional[str]
-    company: Optional[str]
-    notes: Optional[str]
+    phone: Optional[str] = None
+    company: Optional[str] = None
+    notes: Optional[str] = None
 
 class CustomerCreate(CustomerBase):
     """
@@ -91,6 +91,24 @@ class CustomerCreate(CustomerBase):
     Inherits all fields from CustomerBase.
     """
     pass
+
+class CustomerRegister(BaseModel):
+    """
+    Schema for customer registration requests.
+    """
+    name: str
+    email: str
+    password: str
+    phone: Optional[str] = None
+    company: Optional[str] = None
+    notes: Optional[str] = None
+
+class CustomerLogin(BaseModel):
+    """
+    Schema for customer login requests.
+    """
+    email: str
+    password: str
 
 class CustomerUpdate(BaseModel):
     """
@@ -128,7 +146,7 @@ class TicketBase(BaseModel):
         status: Current status ('open', 'in-progress', 'resolved', 'closed')
     """
     title: str
-    description: Optional[str]
+    description: Optional[str] = None
     priority: str = "medium"
     status: str = "open"
 
@@ -136,9 +154,10 @@ class TicketCreate(TicketBase):
     """
     Schema for ticket creation requests.
 
-    Extends TicketBase with required customer and optional agent assignment.
+    Extends TicketBase with customer and optional agent assignment.
+    customer_id is optional for customers (inferred from JWT) but required for staff.
     """
-    customer_id: int
+    customer_id: Optional[int] = None
     assigned_agent_id: Optional[int] = None
 
 class TicketOut(TicketBase):
@@ -148,8 +167,11 @@ class TicketOut(TicketBase):
     Includes additional fields returned to clients.
     """
     id: int
+    customer_id: Optional[int] = None
     created_at: datetime
-    assigned_agent_id: Optional[int]
+    assigned_agent_id: Optional[int] = None
+    customer_name: Optional[str] = None
+    assigned_agent_name: Optional[str] = None
 
     class Config:
         from_attributes = True  # Enable ORM model conversion

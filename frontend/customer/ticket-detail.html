@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Details - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge">Customer</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="tickets.html" class="active">My Tickets</a>
+            <a href="create-ticket.html">Create Ticket</a>
+            <a href="profile.html">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Customer</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <a href="tickets.html" style="color: var(--secondary); text-decoration: none; font-size: 0.88rem; font-weight: 600;">&larr; Back to My Tickets</a>
+                <h1 class="page-title" style="margin-top: 0.5rem;">
+                    <span id="ticket-id-display">#...</span>: <span id="ticket-title-display">Loading...</span>
+                </h1>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span id="ticket-status-badge"></span>
+                <span id="ticket-priority-badge"></span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; align-items: start;">
+            <!-- Left Column: Details & Communication Logs -->
+            <div>
+                <!-- Issue Description Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Description</h2>
+                    </div>
+                    <div class="card-body">
+                        <p id="ticket-description-text" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6;"></p>
+                    </div>
+                </div>
+
+                <!-- Conversation & Updates History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Communication History & Updates</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="timeline-container" class="timeline">
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Loading communication log...</p>
+                        </div>
+
+                        <!-- Add Message Form -->
+                        <div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem;">Reply or Add Comment</h3>
+                            <form onsubmit="CustomerApp.handleAddLog(event)">
+                                <div class="form-group">
+                                    <textarea id="log-content" class="form-control" rows="3" placeholder="Type a message or additional details for the support agent..." required></textarea>
+                                </div>
+                                <button type="submit" id="send-log-btn" class="btn btn-primary btn-sm">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Metadata Sidebar -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Ticket Information</h2>
+                    </div>
+                    <div class="card-body" style="font-size: 0.9rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <span style="color: var(--text-muted); display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Created On</span>
+                            <span id="ticket-created-at" style="font-weight: 500;">-</span>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <span style="color: var(--text-muted); display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Assigned Support Agent</span>
+                            <span id="ticket-agent-name" style="font-weight: 600; color: var(--primary);">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Customer Portal</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/customer.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            CustomerApp.loadTicketDetail();
+        });
+    </script>
+</body>
+</html>

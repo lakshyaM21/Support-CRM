@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tickets - Support CRM</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="nav-brand">
+            <span>Support CRM</span>
+            <span class="brand-badge">Customer</span>
+        </a>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="tickets.html" class="active">My Tickets</a>
+            <a href="create-ticket.html">Create Ticket</a>
+            <a href="profile.html">Profile</a>
+        </div>
+        <div class="nav-user">
+            <div class="user-badge">
+                <span id="nav-user-name">Customer</span>
+            </div>
+            <button onclick="Auth.logout()" class="btn btn-secondary btn-sm">Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">My Support Tickets</h1>
+                <p class="page-subtitle">View and monitor the progress of your submitted issues</p>
+            </div>
+            <div>
+                <a href="create-ticket.html" class="btn btn-primary">+ Create New Ticket</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <!-- Filter Bar -->
+            <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; gap: 0.75rem; flex: 1; min-width: 260px;">
+                    <input type="text" id="search-input" class="form-control" placeholder="Search by title or #ID..." oninput="CustomerApp.filterTickets()">
+                </div>
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <select id="filter-status" class="form-control" style="width: auto;" onchange="CustomerApp.filterTickets()">
+                        <option value="">All Statuses</option>
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+
+                    <select id="filter-priority" class="form-control" style="width: auto;" onchange="CustomerApp.filterTickets()">
+                        <option value="">All Priorities</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tickets Table -->
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>Subject / Title</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Created Date</th>
+                            <th>Assigned Agent</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tickets-tbody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">Loading tickets...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Support CRM Platform &bull; Customer Portal</p>
+    </footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/customer.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            CustomerApp.loadTicketsList();
+        });
+    </script>
+</body>
+</html>

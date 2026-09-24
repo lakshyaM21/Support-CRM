@@ -56,6 +56,7 @@ class Customer(Base):
     phone = Column(String, nullable=True)
     company = Column(String, nullable=True)
     notes = Column(Text, nullable=True)
+    hashed_password = Column(String, nullable=True)
 
     # Relationship: One customer can have many tickets
     tickets = relationship("Ticket", back_populates="customer")
@@ -92,6 +93,14 @@ class Ticket(Base):
     customer = relationship("Customer", back_populates="tickets")
     logs = relationship("Log", back_populates="ticket")
     assigned_agent = relationship("User", back_populates="assigned_tickets")
+
+    @property
+    def customer_name(self):
+        return self.customer.name if self.customer else None
+
+    @property
+    def assigned_agent_name(self):
+        return self.assigned_agent.username if self.assigned_agent else None
 
 class Log(Base):
     """

@@ -1,258 +1,238 @@
-# Support CRM Backend
+# Support CRM – Customer Support Management System
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
-[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0+-red.svg)](https://www.sqlalchemy.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+A full-stack, lightweight Customer Relationship and Support Management System built with **Python**, **FastAPI**, **SQLAlchemy**, **SQLite**, and a responsive **Vanilla HTML/CSS/JavaScript** frontend.
 
-A comprehensive backend system built with Python and FastAPI that provides secure RESTful APIs for managing customer support interactions. This CRM backend enables efficient customer relationship management with features for authentication, ticket tracking, communication logging, and analytics.
+The application implements secure role-based access control, allowing **Customers** to register, authenticate with JWT, submit support requests, and track their tickets in total privacy, while **Agents** and **Admins** manage tickets, assign issues, log communications, and inspect analytics.
 
-## 📋 Table of Contents
+---
 
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Documentation](#api-documentation)
-- [Project Structure](#project-structure)
-- [Database](#database)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+## 📋 Features
 
-## ✨ Features
+* **Customer Registration**: New customers can self-register with Name, Email, Phone, Company, and securely hashed passwords.
+* **Customer Login**: Secure JWT-based authentication verifying hashed credentials.
+* **JWT Authentication**: Token-based authentication using HS256 algorithm and bcrypt password hashing.
+* **Agent Authentication**: Support staff login for handling customer inquiries.
+* **Admin Authentication**: Administrative access to workload reports and system statistics.
+* **Customer-Specific Tickets**: Automatic association with the authenticated customer; Customers only see their own tickets. Strict backend authorization prevents cross-customer data leakage.
+* **Ticket Management**: Create, view, update status (`open`, `in-progress`, `resolved`, `closed`), prioritize (`low`, `medium`, `high`, `urgent`), and assign agents.
+* **Customer Management**: Staff CRUD operations for managing client profiles and contact information.
+* **Communication Logs**: Record multi-channel interactions (`call`, `email`, `chat`) attached directly to tickets for complete activity tracking.
+* **Reports & Analytics**: Real-time summary counts by status, agent workload distribution, and average response times.
+* **Frontend Dashboard**: Clean, responsive, modern interface built in pure Vanilla HTML, CSS, and JavaScript using Fetch API.
 
-### 🔐 Authentication & Authorization
-- JWT-based authentication system
-- Role-based access control (Agent, Admin)
-- Secure password hashing with bcrypt
-- Token-based API access
+---
 
-### 👥 Customer Management
-- Complete CRUD operations for customer profiles
-- Customer search and filtering capabilities
-- Customer data validation and integrity
+## 🛠 Technologies
 
-### 🎫 Support Ticket System
-- Create and manage support tickets
-- Priority levels (Low, Medium, High, Urgent)
-- Status tracking (Open, In-Progress, Resolved, Closed)
-- Agent assignment functionality
+* **Python 3.8+**: Core programming language
+* **FastAPI**: Modern, fast ASGI web framework for RESTful APIs
+* **SQLAlchemy**: Python SQL toolkit and Object-Relational Mapper (ORM)
+* **SQLite**: Lightweight zero-configuration SQL database engine (`crm.db`)
+* **Pydantic**: Data validation and serialization
+* **JWT (python-jose & passlib)**: JSON Web Token generation and Bcrypt password hashing
+* **HTML5**: Semantic markup for client dashboards
+* **CSS3**: Responsive styling, custom design variables, status badges
+* **JavaScript (Vanilla ES6)**: Asynchronous API communication via native `fetch()`
 
-### 📝 Communication Logs
-- Track all customer interactions
-- Support for multiple communication types (Call, Email, Chat)
-- Timestamped log entries
-- Ticket association for context
+---
 
-### 📊 Analytics & Reporting
-- Ticket status summaries
-- Agent workload distribution
-- Response time analytics
-- Dashboard-ready JSON responses
+## 🗂 Project Structure
 
-## 🛠 Technology Stack
-
-- **Framework**: [FastAPI](https://fastapi.tiangolo.com/) - Modern, fast web framework for building APIs
-- **Database**: [SQLAlchemy](https://www.sqlalchemy.org/) - SQL toolkit and ORM
-- **Authentication**: [PyJWT](https://pyjwt.readthedocs.io/) - JSON Web Token implementation
-- **Password Hashing**: [Passlib](https://passlib.readthedocs.io/) - Secure password hashing
-- **Validation**: [Pydantic](https://pydantic-docs.helpmanual.io/) - Data validation and serialization
-- **Documentation**: [Swagger UI](https://swagger.io/tools/swagger-ui/) - Interactive API documentation
-
-## 📋 Prerequisites
-
-- Python 3.8 or higher
-- pip package manager
-- SQLite (included with Python) or PostgreSQL/MySQL for production
-
-## 🚀 Installation
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/BROOKS69/support-crm-backend.git
-cd support-crm-backend
+```text
+support-crm/
+├── app/
+│   ├── __init__.py
+│   ├── main.py              # FastAPI app initialization, CORS & static frontend mount
+│   ├── database.py          # SQLAlchemy database engine and session dependency (get_db)
+│   ├── models.py            # SQLAlchemy ORM models (User, Customer, Ticket, Log)
+│   ├── schemas.py           # Pydantic models for validation and responses
+│   ├── auth.py              # Authentication router (User & Customer login/registration)
+│   └── routers/
+│       ├── __init__.py
+│       ├── auth.py          # Re-exports auth router for consistency
+│       ├── customers.py     # Customer CRUD endpoints & self-service profile
+│       ├── tickets.py       # Ticket CRUD with customer ownership isolation
+│       ├── logs.py          # Communication log endpoints
+│       ├── reports.py       # Analytics and reporting endpoints
+│       └── utils.py         # Passwords, JWT generation, get_current_actor dependency
+│
+├── frontend/
+│   ├── index.html           # Landing page with portal entry points
+│   ├── login.html           # Unified sign-in (Customer tab & Staff tab)
+│   ├── register.html        # Customer registration page
+│   ├── css/
+│   │   └── style.css        # Clean, modern stylesheet
+│   ├── js/
+│   │   ├── api.js           # Central Fetch API client with automatic JWT headers
+│   │   ├── auth.js          # Client session management & role guards
+│   │   ├── customer.js      # Customer dashboard, ticket creation & conversation
+│   │   ├── agent.js         # Agent ticket queue, assignment & communication logging
+│   │   └── admin.js         # Admin reporting & workload analytics
+│   ├── customer/
+│   │   ├── dashboard.html   # Customer metrics & recent tickets
+│   │   ├── tickets.html     # My Tickets table with search & filters
+│   │   ├── create-ticket.html # Customer ticket creation form
+│   │   ├── ticket-detail.html # View ticket status & conversation history
+│   │   └── profile.html     # Manage customer contact details
+│   ├── agent/
+│   │   ├── dashboard.html   # Agent queue overview & metrics
+│   │   ├── tickets.html     # Full ticket queue with status/priority filtering
+│   │   ├── ticket-detail.html # Update status/priority, assign agent & add logs
+│   │   └── customers.html   # Directory of registered customers
+│   └── admin/
+│       └── dashboard.html   # Status summaries, workload distribution, response metrics
+│
+├── crm.db                   # SQLite database
+├── migrate_db.py            # Idempotent database schema migration script
+├── test_api.py              # Existing API integration tests
+├── test_customer_flow.py    # Customer authentication & ticket flow tests
+├── test_full_workflow.py    # End-to-end full system workflow test
+├── requirements.txt         # Project dependencies
+└── README.md                # Project documentation
 ```
 
-### 2. Create Virtual Environment
+---
 
+## 🚀 Setup & Installation
+
+### 1. Clone the Repository
 ```bash
-# Create virtual environment
-python -m venv .venv
+git clone https://github.com/wisdom-dosoo/support-crm.git
+cd "Support CRM 1"
+```
 
-# Activate virtual environment
-# On Windows:
+### 2. Set Up Python Virtual Environment
+```bash
+# On Windows
+python -m venv .venv
 .venv\Scripts\activate
-# On macOS/Linux:
+
+# On macOS/Linux
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
 ### 3. Install Dependencies
-
 ```bash
-pip install -r app/requirements.txt
+pip install -r requirements.txt
 ```
 
-### 4. Initialize Database
-
+### 4. Run Database Migration
+Apply schema updates safely (adds `hashed_password` to `customers` if missing):
 ```bash
 python migrate_db.py
 ```
 
-This will create the necessary database tables and set up the initial schema.
+---
 
-## 🎯 Usage
+## 🏃 Running the Application
 
-### Development Server
-
-Start the development server with auto-reload:
-
+### 1. Start the Backend API Server
 ```bash
 uvicorn app.main:app --reload
 ```
-
-The server will start at `http://localhost:8000`
-
-### Production Deployment
-
-For production deployment, use a production ASGI server:
-
-```bash
-# Using Gunicorn with Uvicorn workers
-gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+The FastAPI backend starts at:
+```text
+http://127.0.0.1:8000
 ```
 
-## 📚 API Documentation
+### 2. Access the Frontend
 
-Once the server is running, access the comprehensive API documentation:
+You can access the frontend in either of two ways:
 
-- **Swagger UI**: `http://localhost:8000/docs`
-- **ReDoc**: `http://localhost:8000/redoc`
-- **OpenAPI Schema**: `http://localhost:8000/openapi.json`
+* **Directly through FastAPI (Recommended)**:
+  Open your web browser and navigate to:
+  ```text
+  http://127.0.0.1:8000/frontend/
+  ```
 
-### Key Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/auth/login` | POST | User authentication |
-| `/auth/register` | POST | User registration |
-| `/customers` | GET/POST | Customer management |
-| `/tickets` | GET/POST | Ticket operations |
-| `/logs` | GET/POST | Communication logs |
-| `/reports/tickets-summary` | GET | Analytics data |
-
-## 🏗 Project Structure
-
-```
-support-crm-backend/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI application instance
-│   ├── database.py          # Database configuration
-│   ├── models.py            # SQLAlchemy models
-│   ├── schemas.py           # Pydantic schemas
-│   ├── auth.py              # Authentication utilities
-│   └── routers/
-│       ├── __init__.py
-│       ├── auth.py          # Authentication endpoints
-│       ├── customers.py     # Customer management
-│       ├── tickets.py       # Ticket operations
-│       ├── logs.py          # Communication logs
-│       ├── reports.py       # Analytics & reporting
-│       └── utils.py         # Authentication utilities
-├── crm.db                   # SQLite database (development)
-├── migrate_db.py            # Database migration script
-├── test_api.py              # API testing script
-├── requirements.txt         # Python dependencies
-└── README.md               # Project documentation
-```
-
-## 🗄 Database
-
-### Development
-- **Database**: SQLite (`crm.db`)
-- **Location**: Project root directory
-- **Migration**: Run `python migrate_db.py`
-
-### Production
-For production environments, configure environment variables:
-
-```bash
-export DATABASE_URL="postgresql://user:password@localhost/crm_db"
-# or
-export DATABASE_URL="mysql://user:password@localhost/crm_db"
-```
-
-## 🧪 Testing
-
-Run the included test suite:
-
-```bash
-python test_api.py
-```
-
-This will test all major API endpoints and ensure functionality.
-
-## 🚢 Deployment
-
-### Docker Deployment
-
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-COPY app/requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Environment Variables
-
-Create a `.env` file for configuration:
-
-```env
-DATABASE_URL=sqlite:///./crm.db
-SECRET_KEY=your-secret-key-here
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-
-- Follow PEP 8 style guidelines
-- Write comprehensive docstrings
-- Add tests for new features
-- Update documentation as needed
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Contact
-
-**Project Maintainer**: [BROOKS]
-
-- **Email**: dosoowisdom1@gmail.com
-- **GitHub**: [@BROOKS69](https://github.com/BROOKS69)
-- **LinkedIn**: [Your LinkedIn Profile](https://www.linkedin.com/in/wisdomdosoo1)
+* **Or open `frontend/index.html`**:
+  Open `frontend/index.html` directly in any web browser or use VSCode Live Server. The built-in `api.js` client automatically connects to `http://127.0.0.1:8000`.
 
 ---
 
-⭐ **Star this repository** if you find it helpful!
+## 📚 API Documentation
 
-*Built with ❤️ using FastAPI and Python*
+FastAPI provides built-in interactive API documentation:
+* **Interactive Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+* **ReDoc Alternative**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+
+---
+
+## 🔐 Authentication System
+
+The application features a dual-entity JWT authentication mechanism:
+
+### 1. Customer Authentication
+* **Registration**: `POST /auth/customer/register`
+  * Accepts: `name`, `email`, `password`, `phone`, `company`, `notes`.
+  * Hashes password using `bcrypt`.
+* **Login**: `POST /auth/customer/login`
+  * Accepts: `email`, `password`.
+  * Returns: JWT bearer token containing `{"sub": email, "role": "customer", "customer_id": id}`.
+* **Profile**: `GET /auth/customer/me`
+
+### 2. Staff (Agent / Admin) Authentication
+* **Registration**: `POST /auth/register`
+* **Login**: `POST /auth/login` (OAuth2 password request form)
+  * Accepts: `username`, `password`.
+  * Returns: JWT bearer token containing `{"sub": username}`.
+* **Profile**: `GET /auth/me`
+
+### 3. Role & Ownership Enforcement (`get_current_actor`)
+The backend inspects the JWT payload on every request:
+* **Customer Isolation**: When a customer calls `GET /tickets/`, the query filters strictly by `customer_id == current_customer.id`. Direct requests like `GET /tickets/5` verify ownership and return `403 Forbidden` if the ticket belongs to another customer.
+* **Staff Access**: Agents and Admins have global visibility to view all tickets, reassign agents, modify ticket statuses, and review analytics.
+
+---
+
+## 🎫 Complete Ticket Workflow
+
+```text
+1. Customer Registration / Login
+   └── Customer signs in and receives JWT token.
+
+2. Customer Submits Support Ticket
+   └── Customer enters Title, Description, and Priority (Low, Medium, High, Urgent).
+   └── The backend automatically populates `customer_id` from the JWT session.
+   └── Customer cannot manually assign agents or spoof customer_id.
+
+3. Agent Reviews Queue
+   └── Agent logs in to the Agent Workspace.
+   └── Agent sees the new ticket in the queue.
+   └── Agent can click "Assign to Me" or update status to "In Progress".
+
+4. Communication & Updates
+   └── Agent logs communication notes (Call, Email, Chat).
+   └── Customer views ticket details and sees updated status and messages.
+   └── Customer can reply directly on their ticket timeline.
+
+5. Ticket Resolution
+   └── Agent marks ticket status as "Resolved".
+   └── Customer sees "Resolved" badge on their dashboard.
+```
+
+---
+
+## 🧪 Testing
+
+The repository contains automated test suites covering customer authentication, data isolation, and existing staff APIs:
+
+```bash
+# Run all tests
+pytest
+
+# Or run individual test suites
+pytest test_api.py
+pytest test_customer_flow.py
+pytest test_full_workflow.py
+```
+
+### Verified Test Cases:
+1. **Customer Registration**: Validates password hashing and record creation.
+2. **Customer Login**: Verifies credentials and JWT token issuance.
+3. **Customer Ticket Creation**: Validates automatic customer linkage and default open status.
+4. **Customer Authorization**: Validates that Customer A cannot view or tamper with Customer B's tickets (HTTP 403).
+5. **Agent Operations**: Verifies that agents can view tickets across all customers, assign tickets, and update status.
+6. **Customer Visibility**: Confirms that customers immediately observe status changes made by agents.
+7. **Existing APIs**: Confirms full backwards compatibility for User CRUD, Customer CRUD, Logs, and Reports.
