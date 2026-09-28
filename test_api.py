@@ -1,5 +1,5 @@
 """
-API tests for Support CRM Backend.
+API tests for Support CRM Backend
 
 This module contains comprehensive tests for all API endpoints using pytest
 and FastAPI's TestClient. Tests cover authentication, CRUD operations,
